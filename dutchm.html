@@ -3,237 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dutch Bangla Bank PLC. - Admin Panel & High-Res QR Generator</title>
+    <title>Dutch Bangla Bank Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- QR Code Generator Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { box-sizing: border-box; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: #f1f5f9; 
-            margin: 0; 
-            padding: 0; 
-            color: #1e293b; 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
         }
-
-        /* Top Header */
-        .admin-header {
+        .admin-container {
+            max-width: 1100px;
+            margin: 0 auto;
             background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+        .admin-header {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .admin-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-            display: flex;
             align-items: center;
-            gap: 10px;
         }
-        .admin-title span {
-            background: #0284c7;
-            color: white;
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-
-        /* Main Wrapper */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+        .admin-body {
+            padding: 20px;
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
+        @media(min-width: 900px) {
+            .admin-body {
+                grid-template-columns: 380px 1fr;
             }
         }
-
-        /* Card / Box Styling */
-        .card {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-        .card h2 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #334155;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 10px;
-        }
-
-        /* Form Inputs */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .form-group label {
             display: block;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             color: #475569;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .form-group input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 9px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13.5px;
             outline: none;
-            transition: border-color 0.2s;
         }
         .form-group input:focus {
-            border-color: #0284c7;
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+            border-color: #2563eb;
         }
-
-        /* Buttons */
-        .btn {
-            background: #0284c7;
-            color: white;
+        .btn-primary {
+            background: #2563eb;
+            color: #ffffff;
             border: none;
-            padding: 12px 20px;
-            font-size: 14px;
+            width: 100%;
+            padding: 11px;
+            font-size: 13.5px;
             font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
+            margin-top: 5px;
         }
-        .btn:hover { background: #0369a1; }
-        .btn-danger { background: #dc2626; padding: 6px 12px; font-size: 12px; width: auto; border-radius: 4px; color: white; border: none; cursor: pointer; }
-        .btn-danger:hover { background: #b91c1c; }
-
-        /* Data Table */
-        .table-responsive {
-            overflow-x: auto;
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .right-panel {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Search Bar Style */
+        .search-box {
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        /* Table Style */
+        .table-container {
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #ffffff;
+            margin-bottom: 15px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12.5px;
+            text-align: left;
         }
         th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 10px;
+            border-bottom: 1px solid #f1f5f9;
         }
         th {
             background: #f8fafc;
-            font-weight: 600;
             color: #475569;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
         }
-
-        /* QR Preview Section */
-        .qr-preview-box {
-            margin-top: 20px;
-            text-align: center;
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            padding: 20px;
-            border-radius: 8px;
-            display: none;
-        }
-        #qrcodeCanvas {
-            display: inline-block;
-            margin: 10px 0;
-            background: white;
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .download-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        .download-btn {
-            background: #0f172a;
+        tr:hover { background: #f1f5f9; }
+        .btn-qr {
+            background: #0284c7;
             color: white;
             border: none;
-            padding: 8px 14px;
-            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .btn-del {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        /* Output Preview Section */
+        .preview-box {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #qrcode {
+            margin: 10px 0;
+            padding: 8px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        textarea.code-textarea {
+            width: 100%;
+            height: 90px;
+            background: #0f172a;
+            color: #38bdf8;
+            font-family: monospace;
+            font-size: 11.5px;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            resize: none;
+            outline: none;
+            margin-top: 8px;
+            text-align: left;
+        }
+        .btn-copy {
+            margin-top: 5px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 11.5px;
             font-weight: 600;
             border-radius: 4px;
             cursor: pointer;
-            text-decoration: none;
+            align-self: flex-start;
         }
-        .download-btn:hover { background: #334155; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+<div class="admin-container">
     <div class="admin-header">
-        <div class="admin-title">
-            Dutch Bangla Bank Admin Panel <span>Secure Portal</span>
-        </div>
-        <a href="qr.html" target="_blank" style="font-size: 13px; color: #0284c7; text-decoration: none; font-weight: 600;">ভিউ ভেরিফিকেশন পেজ (qr.html) ↗</a>
+        <span>Dutch Bangla Bank Admin Panel</span>
+        <span style="font-size: 11.5px; background: #1e293b; padding: 3px 8px; border-radius: 4px;">Secure Portal</span>
     </div>
-
-    <!-- Main Container -->
-    <div class="container">
-        
-        <!-- Left Box: Form & High-Res QR Creator -->
-        <div class="card">
-            <h2>নতুন সার্টিফিকেট / একাউন্ট যুক্ত করুন</h2>
-            <form id="addForm">
-                <div class="form-group">
-                    <label>ইউনিিক আইডি (Unique ID / Key)</label>
-                    <input type="text" id="uniqueId" placeholder="যেমন: acc_101" required>
-                </div>
-                <div class="form-group">
-                    <label>একাউন্ট নম্বর (Account No)</label>
-                    <input type="text" id="accountNo" placeholder="যেমন: 1861570025384" required>
-                </div>
-                <div class="form-group">
-                    <label>একাউন্টধারীর নাম (Account Name)</label>
-                    <input type="text" id="accountName" placeholder="যেমন: AHAMMAD MAZI" required>
-                </div>
-                <div class="form-group">
-                    <label>রিপোর্টের তারিখের ব্যালেন্স (Balance)</label>
-                    <input type="text" id="balance" placeholder="যেমন: 5,118,827.42" required>
-                </div>
-                <div class="form-group">
-                    <label>রিপোর্টের তারিখ (Generation Date)</label>
-                    <input type="text" id="genDate" placeholder="যেমন: 06-Sep-2026" required>
-                </div>
-                <button type="submit" class="btn">সেভ করুন ও কিউআর জেনারেট করুন</button>
-            </form>
-
-            <!-- High-Res QR Output Section -->
-            <div class="qr-preview-box" id="qrPreviewSection">
-                <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #16a34a;">✅ কিউআর কোড সফলভাবে তৈরি হয়েছে!</h4>
-                <p style="font-size: 11.5px; color: #64748b; margin: 0 0 10px 0;">হাই-রেজুলেশনে ডাউনলোড করুন:</p>
-                <div id="qrcodeCanvas"></div>
-                <div class="download-actions">
-                    <button class="download-btn" onclick="downloadQR('png')">PNG ডাউনলোড</button>
-                    <button class="download-btn" onclick="downloadQR('jpg')">JPG ডাউনলোড</button>
-                </div>
+    
+    <div class="admin-body">
+        <!-- Left Side: Form -->
+        <div>
+            <h3 style="margin-top: 0; font-size: 14px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">নতুন সার্টিফিকেট যুক্ত করুন</h3>
+            
+            <div class="form-group">
+                <label>ইউনিক আইডি (Unique ID)</label>
+                <input type="text" id="uid" placeholder="যেমন: mazi">
             </div>
+            <div class="form-group">
+                <label>একাউন্ট নম্বর (Account No)</label>
+                <input type="text" id="accNo" placeholder="যেমন: 1861570025384">
+            </div>
+            <div class="form-group">
+                <label>একাউন্টের নাম (Account Name)</label>
+                <input type="text" id="accName" placeholder="যেমন: AHAMMAD MAZI">
+            </div>
+            <div class="form-group">
+                <label>ব্যালেন্স (Balance)</label>
+                <input type="text" id="balance" placeholder="যেমন: 5,118,827.42">
+            </div>
+            <div class="form-group">
+                <label>তারিখ (Generation Date)</label>
+                <input type="text" id="genDate" placeholder="যেমন: 06-Sep-2026">
+            </div>
+            
+            <button class="btn-primary" onclick="saveData()">সেভ করুন ও কোড তৈরি করুন</button>
         </div>
 
-        <!-- Right Box: Data Management List -->
-        <div class="card">
-            <h2>সংরক্ষিত ডেটা ও কিউআর ম্যানেজমেন্ট</h2>
-            <div class="table-responsive">
-                <table>
+        <!-- Right Side: Search, List & Preview -->
+        <div class="right-panel">
+            <h3 style="margin-top: 0; font-size: 14px; color: #0f172a; margin-bottom: 10px;">সংরক্ষিত ডেটা ও ফাইন্ড অপশন</h3>
+            
+            <!-- Search Bar -->
+            <div class="search-box">
+                <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 আইডি বা নাম দিয়ে খুঁজুন...">
+            </div>
+
+            <!-- Table List -->
+            <div class="table-container">
+                <table id="dataTable">
                     <thead>
                         <tr>
                             <th>আইডি (ID)</th>
@@ -242,147 +253,140 @@
                             <th>অ্যাকশন</th>
                         </tr>
                     </thead>
-                    <tbody id="dataTableBody">
-                        <!-- Dynamic rows -->
+                    <tbody id="tableBody">
+                        <!-- Dynamic Rows -->
                     </tbody>
                 </table>
             </div>
-        </div>
 
-    </div>
-
-<script src="data.js"></script>
-<script>
-    let currentData = typeof bankData !== 'undefined' ? bankData : {};
-
-    const savedLocal = localStorage.getItem('janata_bank_custom_data');
-    if (savedLocal) {
-        currentData = JSON.parse(savedLocal);
-    }
-
-    const form = document.getElementById('addForm');
-    const tableBody = document.getElementById('dataTableBody');
-    let activeIdName = "";
-
-    function renderTable() {
-        tableBody.innerHTML = '';
-        const keys = Object.keys(currentData);
-        
-        if (keys.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">কোনো ডেটা পাওয়া যায়নি।</td></tr>`;
-            return;
-        }
-
-        keys.forEach(key => {
-            const item = currentData[key];
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>${key}</strong></td>
-                <td>${item.accountNo || item.account || '---'}</td>
-                <td>${item.name || item.accountName || '---'}</td>
-                <td>
-                    <button class="download-btn" style="background:#0284c7; padding: 5px 10px;" onclick="generateQRFor('${key}')">QR কোড</button>
-                    <button class="btn-danger" onclick="deleteData('${key}')">ডিলিট</button>
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
-    }
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const id = document.getElementById('uniqueId').value.trim();
-        const accountNo = document.getElementById('accountNo').value.trim();
-        const name = document.getElementById('accountName').value.trim();
-        const balance = document.getElementById('balance').value.trim();
-        const date = document.getElementById('genDate').value.trim();
-
-        currentData[id] = { accountNo, name, balance, date };
-        localStorage.setItem('janata_bank_custom_data', JSON.stringify(currentData));
-
-        renderTable();
-        generateQRFor(id);
-        form.reset();
-        alert('ডেটা সফলভাবে সংরক্ষিত হয়েছে!');
-    });
-
-    function generateQRFor(id) {
-        const item = currentData[id];
-        if (!item) return;
-
-        // qr.html পেজের সাথে লিংক করে কিউআর কোড জেনারেট করা
-        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-        const activeQrText = `${baseUrl}qr.html?id=${id}`;
-        activeIdName = id;
-
-        const previewSection = document.getElementById('qrPreviewSection');
-        const qrcodeContainer = document.getElementById('qrcodeCanvas');
-        
-        previewSection.style.display = 'block';
-        qrcodeContainer.innerHTML = '';
-
-        new QRCode(qrcodeContainer, {
-            text: activeQrText,
-            width: 220,
-            height: 220,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H // High resolution/correction
-        });
-    }
-
-    function downloadQR(format) {
-        const img = document.querySelector('#qrcodeCanvas img');
-        const canvasTag = document.querySelector('#qrcodeCanvas canvas');
-        
-        let imageUrl = "";
-        if (img && img.src) {
-            imageUrl = img.src;
-        } else if (canvasTag) {
-            imageUrl = canvasTag.toDataURL("image/png");
-        }
-
-        if (!imageUrl) {
-            alert('প্রথমে কিউআর কোড জেনারেট করুন!');
-            return;
-        }
-
-        if (format === 'png') {
-            const link = document.createElement('a');
-            link.href = imageUrl;
-            link.download = `QR_Code_${activeIdName}.png`;
-            link.click();
-        } else if (format === 'jpg') {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const imageObj = new Image();
-            imageObj.onload = function() {
-                canvas.width = imageObj.width;
-                canvas.height = imageObj.height;
-                context.fillStyle = "#FFFFFF"; // JPG transparent background fix
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(imageObj, 0, 0);
+            <!-- Preview Box -->
+            <div class="preview-box">
+                <div style="font-size: 12px; font-weight: 600; color: #334155;" id="previewTitle">সিলেক্ট করা ডেটার কিউআর ও জেএস কোড</div>
+                <div id="qrcode">কোডের জন্য তালিকা থেকে "QR কোড" এ ক্লিক করুন</div>
                 
-                const jpgUrl = canvas.toDataURL("image/jpeg", 1.0);
-                const link = document.createElement('a');
-                link.href = jpgUrl;
-                link.download = `QR_Code_${activeIdName}.jpg`;
-                link.click();
-            };
-            imageObj.src = imageUrl;
+                <div style="width: 100%; text-align: left;" id="codeContainer" style="display:none;">
+                    <textarea id="jsCodeOutput" class="code-textarea" readonly></textarea>
+                    <button class="btn-copy" onclick="copyJsCode()">📋 কোড কপি করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // LocalStorage থেকে ডেটা লোড করা (যাতে মুছে না যায়)
+    let db = JSON.parse(localStorage.getItem('bankDatabase')) || {
+        "mazi": {
+            accountNo: "18610700082446",
+            name: "AHAMMAD MAZI",
+            amount: "5,118,827.42",
+            date: "06-Sep-2026"
+        }
+    };
+
+    function renderTable(filter = "") {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+
+        for (let key in db) {
+            let item = db[key];
+            if(key.toLowerCase().includes(filter.toLowerCase()) || item.name.toLowerCase().includes(filter.toLowerCase()) || item.accountNo.includes(filter)) {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 600;">${key}</td>
+                    <td>${item.accountNo}</td>
+                    <td>${item.name}</td>
+                    <td>
+                        <button class="btn-qr" onclick="showDetails('${key}')">QR কোড</button>
+                        <button class="btn-del" onclick="deleteData('${key}')">মুছুন</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
         }
     }
 
-    function deleteData(id) {
-        if (confirm(`আপনি কি নিশ্চিতভাবে '${id}' ডিলিট করতে চান?`)) {
-            delete currentData[id];
-            localStorage.setItem('janata_bank_custom_data', JSON.stringify(currentData));
+    function saveData() {
+        const uid = document.getElementById('uid').value.trim();
+        const accNo = document.getElementById('accNo').value.trim();
+        const accName = document.getElementById('accName').value.trim();
+        const balance = document.getElementById('balance').value.trim();
+        const genDate = document.getElementById('genDate').value.trim();
+
+        if(!uid || !accNo || !accName || !balance || !genDate) {
+            alert('দয়া করে সব ফিল্ড পূরণ করুন!');
+            return;
+        }
+
+        db[uid] = {
+            accountNo: accNo,
+            name: accName,
+            amount: balance,
+            date: genDate
+        };
+
+        localStorage.setItem('bankDatabase', JSON.stringify(db));
+        renderTable();
+        showDetails(uid);
+        alert('ডেটা সফলভাবে সেভ হয়েছে!');
+        
+        // Form clear
+        document.getElementById('uid').value = '';
+        document.getElementById('accNo').value = '';
+        document.getElementById('accName').value = '';
+        document.getElementById('balance').value = '';
+        document.getElementById('genDate').value = '';
+    }
+
+    function showDetails(uid) {
+        const item = db[uid];
+        if(!item) return;
+
+        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+        const targetUrl = baseUrl + 'qr.html?id=' + uid;
+
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, {
+            text: targetUrl,
+            width: 110,
+            height: 110
+        });
+
+        const jsSnippet = `    "${uid}": {\n        accountNo: "${item.accountNo}",\n        name: "${item.name}",\n        amount: "${item.amount}",\n        date: "${item.date}"\n    },`;
+        document.getElementById('jsCodeOutput').value = jsSnippet;
+        document.getElementById('previewTitle').innerText = "ID: " + uid + " এর কিউআর ও জেএস কোড";
+    }
+
+    function searchTable() {
+        const query = document.getElementById('searchInput').value;
+        renderTable(query);
+    }
+
+    function deleteData(uid) {
+        if(confirm('আপনি কি এই ডেটা ডিলিট করতে চান?')) {
+            delete db[uid];
+            localStorage.setItem('bankDatabase', JSON.stringify(db));
             renderTable();
-            document.getElementById('qrPreviewSection').style.display = 'none';
+            document.getElementById('qrcode').innerHTML = "ডেটা মুছে ফেলা হয়েছে";
+            document.getElementById('jsCodeOutput').value = "";
         }
     }
 
+    // Initial render
     renderTable();
+
+    function copyJsCode() {
+        const textarea = document.getElementById('jsCodeOutput');
+        if(!textarea.value) {
+            alert('আগে তালিকা থেকে QR কোড বাটনে ক্লিক করুন!');
+            return;
+        }
+        textarea.select();
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert('JS কোড সফলভাবে কপি হয়েছে!');
+        });
+    }
 </script>
 
 </body>
