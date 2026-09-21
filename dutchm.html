@@ -90,7 +90,6 @@
             display: flex;
             flex-direction: column;
         }
-        /* Search Bar Style */
         .search-box {
             margin-bottom: 15px;
         }
@@ -102,7 +101,6 @@
             font-size: 13px;
             outline: none;
         }
-        /* Table Style */
         .table-container {
             max-height: 220px;
             overflow-y: auto;
@@ -149,7 +147,6 @@
             font-size: 11px;
             font-weight: 600;
         }
-        /* Output Preview Section */
         .preview-box {
             background: #ffffff;
             border: 1px solid #cbd5e1;
@@ -166,6 +163,29 @@
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 6px;
+            display: inline-block;
+        }
+        .download-btn-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .btn-download {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 11.5px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-download:hover {
+            background: #6d28d9;
         }
         textarea.code-textarea {
             width: 100%;
@@ -179,7 +199,7 @@
             border: none;
             resize: none;
             outline: none;
-            margin-top: 8px;
+            margin-top: 5px;
             text-align: left;
         }
         .btn-copy {
@@ -261,11 +281,18 @@
 
             <!-- Preview Box -->
             <div class="preview-box">
-                <div style="font-size: 12px; font-weight: 600; color: #334155;" id="previewTitle">সিলেক্ট করা ডেটার কিউআর ও জেএস কোড</div>
-                <div id="qrcode">কোডের জন্য তালিকা থেকে "QR কোড" এ ক্লিক করুন</div>
+                <div style="font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 5px;" id="previewTitle">সিলেক্ট করা ডেটার কিউআর ও জেএস কোড</div>
                 
-                <div style="width: 100%; text-align: left;" id="codeContainer" style="display:none;">
-                    <textarea id="jsCodeOutput" class="code-textarea" readonly></textarea>
+                <div id="qrcode"></div>
+                
+                <!-- High Resolution Download Buttons (PNG & JPG) -->
+                <div class="download-btn-group" id="downloadBtnContainer" style="display:none;">
+                    <a id="downloadPng" class="btn-download" download="QR_Code.png" onclick="downloadHighResQR('png', event)">📥 PNG ডাউনলোড</a>
+                    <a id="downloadJpg" class="btn-download" download="QR_Code.jpg" onclick="downloadHighResQR('jpg', event)">📥 JPG ডাউনলোড</a>
+                </div>
+                
+                <div style="width: 100%; text-align: left; margin-top: 5px;">
+                    <textarea id="jsCodeOutput" class="code-textarea" readonly placeholder="তালিকা থেকে 'QR কোড' বাটনে ক্লিক করলে জেএস কোড এখানে দেখাবে"></textarea>
                     <button class="btn-copy" onclick="copyJsCode()">📋 কোড কপি করুন</button>
                 </div>
             </div>
@@ -274,7 +301,6 @@
 </div>
 
 <script>
-    // LocalStorage থেকে ডেটা লোড করা (যাতে মুছে না যায়)
     let db = JSON.parse(localStorage.getItem('bankDatabase')) || {
         "mazi": {
             accountNo: "18610700082446",
@@ -283,6 +309,9 @@
             date: "06-Sep-2026"
         }
     };
+
+    let currentQrUrl = "";
+    let currentUid = "";
 
     function renderTable(filter = "") {
         const tbody = document.getElementById('tableBody');
@@ -330,7 +359,6 @@
         showDetails(uid);
         alert('ডেটা সফলভাবে সেভ হয়েছে!');
         
-        // Form clear
         document.getElementById('uid').value = '';
         document.getElementById('accNo').value = '';
         document.getElementById('accName').value = '';
@@ -342,20 +370,77 @@
         const item = db[uid];
         if(!item) return;
 
+        currentUid = uid;
         const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-        const targetUrl = baseUrl + 'qr.html?id=' + uid;
+        currentQrUrl = baseUrl + 'qr.html?id=' + uid;
 
         const qrContainer = document.getElementById('qrcode');
         qrContainer.innerHTML = "";
+        
+        // Render QR Code normally on screen
         new QRCode(qrContainer, {
-            text: targetUrl,
-            width: 110,
-            height: 110
+            text: currentQrUrl,
+            width: 120,
+            height: 120
         });
+
+        document.getElementById('downloadBtnContainer').style.display = "flex";
 
         const jsSnippet = `    "${uid}": {\n        accountNo: "${item.accountNo}",\n        name: "${item.name}",\n        amount: "${item.amount}",\n        date: "${item.date}"\n    },`;
         document.getElementById('jsCodeOutput').value = jsSnippet;
         document.getElementById('previewTitle').innerText = "ID: " + uid + " এর কিউআর ও জেএস কোড";
+    }
+
+    // High Resolution QR Code Generator for Download (No pixelation/blur)
+    function downloadHighResQR(format, event) {
+        event.preventDefault();
+        if(!currentQrUrl) return;
+
+        // Create a temporary hidden div to render a high-res QR code (e.g., 600x600 pixels)
+        const tempDiv = document.createElement('div');
+        tempDiv.style.display = 'none';
+        document.body.appendChild(tempDiv);
+
+        new QRCode(tempDiv, {
+            text: currentQrUrl,
+            width: 600,
+            height: 600,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        setTimeout(() => {
+            const canvas = tempDiv.querySelector('canvas');
+            const img = tempDiv.querySelector('img');
+            
+            let dataUrl = "";
+            if (canvas) {
+                if (format === 'jpg') {
+                    // JPG needs white background fill
+                    const ctx = canvas.getContext('2d');
+                    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.putImageData(imgData, 0, 0);
+                    dataUrl = canvas.toDataURL("image/jpeg", 1.0);
+                } else {
+                    dataUrl = canvas.toDataURL("image/png");
+                }
+            } else if (img) {
+                dataUrl = img.src;
+            }
+
+            if (dataUrl) {
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `QR_${currentUid}_HighRes.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            document.body.removeChild(tempDiv);
+        }, 100);
     }
 
     function searchTable() {
@@ -368,12 +453,12 @@
             delete db[uid];
             localStorage.setItem('bankDatabase', JSON.stringify(db));
             renderTable();
-            document.getElementById('qrcode').innerHTML = "ডেটা মুছে ফেলা হয়েছে";
+            document.getElementById('qrcode').innerHTML = "";
+            document.getElementById('downloadBtnContainer').style.display = "none";
             document.getElementById('jsCodeOutput').value = "";
         }
     }
 
-    // Initial render
     renderTable();
 
     function copyJsCode() {
