@@ -7,7 +7,12 @@ const bankData = {
     },
 
 
-
+    "1220": {
+        accountNo: "12145450141",
+        name: "Ahammad mazi",
+        amount: "1254964100",
+        date: "06-09-2002"
+    },
 
 
 
